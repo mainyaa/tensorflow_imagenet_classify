@@ -1,4 +1,4 @@
-TensorFlow imagenet classify
+TensorFlow imagenet classify API Server
 =====
 
 ```
