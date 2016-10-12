@@ -222,7 +222,7 @@ def url():
 
   any_url_obj.close()
   local.close()
-  result = run_inference_on_image(path+"jpg")
+  result = run_inference_on_image(path+".jpg")
   return jsonify(result)
 
 @app.route('/api/imagenet', methods=['POST'])
