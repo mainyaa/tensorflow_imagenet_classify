@@ -187,6 +187,7 @@ def maybe_download_and_extract():
 from flask import Flask, jsonify, render_template, request, redirect
 import os
 import uuid
+import Image
 from werkzeug.utils import secure_filename
 import pprint
 
@@ -207,7 +208,7 @@ def url():
     print("not url")
     return redirect("/")
   print(url)
-  title = uuid.uuid4().hex + ".jpg"
+  title = uuid.uuid4().hex
   print(title)
   path = os.path.join(app.config['UPLOAD_FOLDER'], title)
   print(path)
@@ -215,10 +216,12 @@ def url():
   any_url_obj = urllib.request.urlopen(url)
   local = open(path, 'wb')
   local.write(any_url_obj.read())
+  im = Image.open(path)
+  im.save(path+".jpg", "JPEG")
 
   any_url_obj.close()
   local.close()
-  result = run_inference_on_image(path)
+  result = run_inference_on_image(path+"jpg")
   return jsonify(result)
 
 @app.route('/api/imagenet', methods=['POST'])
