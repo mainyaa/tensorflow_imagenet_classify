@@ -1,19 +1,3 @@
-
-# Copyright 2015 The TensorFlow Authors. All Rights Reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-# ==============================================================================
-
 """Simple image classification with Inception.
 
 Run image classification with Inception trained on ImageNet 2012 Challenge data
@@ -22,12 +6,6 @@ set.
 This program creates a graph from a saved GraphDef protocol buffer,
 and runs inference on an input JPEG image. It outputs human readable
 strings of the top 5 predictions along with their probabilities.
-
-Change the --image_file argument to any jpg image to compute a
-classification of that image.
-
-Please see the tutorial and website for a detailed description of how
-to use this script to perform image recognition.
 
 https://tensorflow.org/tutorials/image_recognition/
 """
@@ -208,6 +186,7 @@ def maybe_download_and_extract():
 # webapp
 from flask import Flask, jsonify, render_template, request, redirect
 import os
+import uuid
 from werkzeug.utils import secure_filename
 import pprint
 
@@ -217,6 +196,30 @@ app = Flask(__name__)
 
 app.config['DEBUG'] = True
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+@app.route('/api/url', methods=['GET', 'POST'])
+def url():
+  maybe_download_and_extract()
+
+  # check if the post request has the file part
+  url = request.query_string[2:]
+  if url == "":
+    print("not url")
+    return redirect("/")
+  print(url)
+  title = uuid.uuid4().hex + ".jpg"
+  print(title)
+  path = os.path.join(app.config['UPLOAD_FOLDER'], title)
+  print(path)
+
+  any_url_obj = urllib.request.urlopen(url)
+  local = open(path, 'wb')
+  local.write(any_url_obj.read())
+
+  any_url_obj.close()
+  local.close()
+  result = run_inference_on_image(path)
+  return jsonify(result)
 
 @app.route('/api/imagenet', methods=['POST'])
 def imagenet():
