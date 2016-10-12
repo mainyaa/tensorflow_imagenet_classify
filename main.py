@@ -214,7 +214,8 @@ def url():
   path = os.path.join(app.config['UPLOAD_FOLDER'], title)
   print(path)
 
-  any_url_obj = urllib.request.urlopen(url, headers={'User-Agent': 'Mozilla/5.0'})
+  req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+  any_url_obj = urllib.request.urlopen(req)
   local = open(path, 'wb')
   local.write(any_url_obj.read())
   im = Image.open(path)
