@@ -187,7 +187,7 @@ def maybe_download_and_extract():
 from flask import Flask, jsonify, render_template, request, redirect
 import os
 import uuid
-import Image
+from PIL import Image
 from werkzeug.utils import secure_filename
 import pprint
 
