@@ -187,7 +187,8 @@ def maybe_download_and_extract():
 from flask import Flask, jsonify, render_template, request, redirect
 import os
 import uuid
-from PIL import Image
+from PIL import Image, ImageFile
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 from werkzeug.utils import secure_filename
 import pprint
 
